@@ -86,7 +86,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setUpdateTime(LocalDateTime.now());
 
         //设置当前记录创建人ID和修改人ID
-        //TODO 后期需要改为当前用户登录的id
         employee.setCreateUser(BaseContext.getCurrentId());
         employee.setUpdateUser(BaseContext.getCurrentId());
 
@@ -99,7 +98,6 @@ public class EmployeeServiceImpl implements EmployeeService {
      * @return
      */
     public PageResult pageQuery(EmployeePageQueryDTO employeePageQueryDTO) {
-
         PageHelper.startPage(employeePageQueryDTO.getPage(),employeePageQueryDTO.getPageSize());
         Page<Employee> page=employeeMapper.pageQuery(employeePageQueryDTO);
         long total=page.getTotal();
@@ -119,4 +117,22 @@ public class EmployeeServiceImpl implements EmployeeService {
                  .build();
          employeeMapper.update(employee);
     }
+
+    public Employee getById(Long id) {
+       Employee employee = employeeMapper.getById(id);
+       employee.setPassword("*****");
+       return employee;
+    }
+
+
+    public void update(EmployeeDTO employeeDTO) {
+        Employee employee = new Employee();
+        BeanUtils.copyProperties(employeeDTO,employee);
+
+        employee.setUpdateTime(LocalDateTime.now());
+        employee.setUpdateUser(BaseContext.getCurrentId());
+        employeeMapper.update(employee);
+    }
+
+
 }
